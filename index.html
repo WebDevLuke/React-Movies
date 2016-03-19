@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>React Hello World</title>
+</head>
+<body>
+
+<div class="container">
+
+	<div class="jumbotron">
+		<p>Search for movies below:</p>
+		<form class="input-group input-group-lg">
+			<input type="text" class="form-control" name="movie-search" placeholder="enter a movie/tv show" aria-describedby="sizing-addon1">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button">Search</button>
+			</span>
+		</form>
+	</div>
+
+
+	<div class="row">
+
+		<div class="col-sm-6 col-md-4 movie">
+			<div class="thumbnail">
+				<img src="http://ia.media-imdb.com/images/M/MV5BMjM5OTQ1MTY5Nl5BMl5BanBnXkFtZTgwMjM3NzMxODE@._V1_SX300.jpg" alt="...">
+				<div class="caption">
+					<table class="table">
+						<tbody>
+							<tr>
+								<th>Title:</th>
+								<td>Game of thrones</td>
+							</tr>
+							<tr>
+								<th>Year:</th>
+								<td>2011-</td>
+							</tr>
+							<tr>
+								<th>Plot:</th>
+								<td>While a civil war brews between several noble families in Westeros, the children of the former rulers of the land attempt to rise up to power. Meanwhile a forgotten race, bent on destruction, return after thousands of years in the North.</td>
+							</tr>
+							<tr>
+								<th>IMDB rating:</th>
+								<td>9.5</td>
+							</tr>
+						</tbody>
+					</table>
+					<p class="text-center"><a href="#" class="btn btn-primary" role="button">View Movie</a></p>
+				</div>
+			</div>
+		</div>
+
+
+
+	</div>
+
+
+
+</div>
+
+<!--
+Assuming you install React with Bower, you include React,
+then the JSXTransformer which turns JSX into JavaScript 
+and then your React code.
+
+In production, you'll want to not use the JSXTransformer
+and should instead look at using something like Gulp, Grunt or
+WebPack to compile JSX into JavaScript. Also, check out:
+http://facebook.github.io/react/docs/tooling-integration.html
+-->
+<link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css"></script>
+<link href="style.css" rel="stylesheet" type="text/css"></script>
+<script src="http://fb.me/react-0.12.2.min.js"></script>
+<script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
+
+<!--
+This is where you link to your React code. Can be .js or .jsx 
+extension, doesn't really matter.
+-->
+<script src="scripts.jsx" type="text/jsx"></script>
+</body>
+</html>

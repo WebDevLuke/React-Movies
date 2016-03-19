@@ -1,0 +1,8 @@
+body {
+	padding-top:30px;
+}
+
+.movie img {
+	max-width:200px;
+	height:auto;
+}
