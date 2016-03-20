@@ -57,9 +57,38 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	var MovieForm = _react2.default.createClass({
+		displayName: 'MovieForm',
+	
+		render: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'jumbotron' },
+				_react2.default.createElement(
+					'p',
+					null,
+					'IMDB Movie/TV show search'
+				),
+				_react2.default.createElement(
+					'form',
+					{ className: 'input-group input-group-lg' },
+					_react2.default.createElement('input', { type: 'text', className: 'form-control', name: 'movie-search', placeholder: 'enter a movie/tv show' }),
+					_react2.default.createElement(
+						'span',
+						{ className: 'input-group-btn' },
+						_react2.default.createElement(
+							'button',
+							{ className: 'btn btn-default', type: 'button' },
+							'Search'
+						)
+					)
+				)
+			);
+		}
+	});
+	
 	var Movie = _react2.default.createClass({
 		displayName: 'Movie',
-	
 	
 		render: function render() {
 			return _react2.default.createElement(
@@ -149,8 +178,9 @@
 				)
 			);
 		}
-	
 	});
+	
+	(0, _reactDom.render)(_react2.default.createElement(MovieForm, null), document.getElementsByClassName("formControl")[0]);
 	
 	(0, _reactDom.render)(_react2.default.createElement(Movie, { poster: 'http://ia.media-imdb.com/images/M/MV5BMjM5OTQ1MTY5Nl5BMl5BanBnXkFtZTgwMjM3NzMxODE@._V1_SX300.jpg', title: 'Game of Thrones', year: '2011 -', plot: 'While a civil war brews between several noble families in Westeros, the children of the former rulers of the land attempt to rise up to power. Meanwhile a forgotten race, bent on destruction, return after thousands of years in the North.', rating: '9.5' }), document.getElementsByClassName("row")[0]);
 
