@@ -3,8 +3,8 @@ body {
 }
 
 .movie img {
-	max-width:200px;
-	height:auto;
+	max-height:250px;
+	width:auto;
 }
 
 .alert {
