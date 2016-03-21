@@ -6,3 +6,11 @@ body {
 	max-width:200px;
 	height:auto;
 }
+
+.alert {
+	display:none;
+}
+
+.alert.active {
+	display:block;
+}

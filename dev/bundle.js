@@ -57,9 +57,49 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	var ErrorBox = _react2.default.createClass({
+		displayName: 'ErrorBox',
+	
+		componentDidUpdate: function componentDidUpdate() {
+			var alertBox = (0, _reactDom.findDOMNode)(this.refs.alertBox);
+			if (this.props.active) {
+				$(alertBox).slideDown(250);
+			} else {
+				$(alertBox).slideUp(250);
+			}
+		},
+		render: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'alert alert-danger', role: 'alert', ref: 'alertBox' },
+				this.props.msg
+			);
+		}
+	});
+	
 	var MovieForm = _react2.default.createClass({
 		displayName: 'MovieForm',
 	
+		getInitialState: function getInitialState() {
+			return {
+				errorMsg: "No movie or TV show entered!",
+				showError: false
+			};
+		},
+		handleSubmit: function handleSubmit(e) {
+			e.preventDefault();
+			if (this.refs.chosenMovie.value !== "") {
+				var movieInput = (0, _reactDom.findDOMNode)(this.refs.chosenMovie);
+				this.props.addMovieFunction(movieInput.value);
+				movieInput.value = "";
+			} else {
+				// Show error box
+				this.setState({ showError: true });
+			}
+		},
+		handleFocus: function handleFocus() {
+			this.setState({ showError: false });
+		},
 		render: function render() {
 			return _react2.default.createElement(
 				'div',
@@ -69,16 +109,17 @@
 					null,
 					'IMDB Movie/TV show search'
 				),
+				_react2.default.createElement(ErrorBox, { active: this.state.showError, msg: this.state.errorMsg }),
 				_react2.default.createElement(
 					'form',
-					{ className: 'input-group input-group-lg' },
-					_react2.default.createElement('input', { type: 'text', className: 'form-control', name: 'movie-search', placeholder: 'enter a movie/tv show' }),
+					{ className: 'input-group input-group-lg', onSubmit: this.handleSubmit },
+					_react2.default.createElement('input', { type: 'text', className: 'form-control', name: 'movie-search', placeholder: 'enter a movie/tv show', onFocus: this.handleFocus, ref: 'chosenMovie' }),
 					_react2.default.createElement(
 						'span',
 						{ className: 'input-group-btn' },
 						_react2.default.createElement(
 							'button',
-							{ className: 'btn btn-default', type: 'button' },
+							{ className: 'btn btn-default' },
 							'Search'
 						)
 					)
@@ -90,6 +131,17 @@
 	var Movie = _react2.default.createClass({
 		displayName: 'Movie',
 	
+		getInitialState: function getInitialState() {
+			return {};
+		},
+		componentDidMount: function componentDidMount() {
+			var component = this;
+			var search = this.props.search.split(' ').join('+');
+			$.get("http://www.omdbapi.com/?t=" + search + "&y=&plot=short&r=json", function (data) {
+				component.setState(data);
+				console.log(data);
+			});
+		},
 		render: function render() {
 			return _react2.default.createElement(
 				'div',
@@ -97,7 +149,7 @@
 				_react2.default.createElement(
 					'div',
 					{ className: 'thumbnail' },
-					_react2.default.createElement('img', { src: this.props.poster, alt: this.props.title }),
+					_react2.default.createElement('img', { src: this.state.Poster, alt: this.state.Title }),
 					_react2.default.createElement(
 						'div',
 						{ className: 'caption' },
@@ -118,7 +170,7 @@
 									_react2.default.createElement(
 										'td',
 										null,
-										this.props.title
+										this.state.Title
 									)
 								),
 								_react2.default.createElement(
@@ -132,7 +184,7 @@
 									_react2.default.createElement(
 										'td',
 										null,
-										this.props.year
+										this.state.Year
 									)
 								),
 								_react2.default.createElement(
@@ -146,7 +198,7 @@
 									_react2.default.createElement(
 										'td',
 										null,
-										this.props.plot
+										this.state.Plot
 									)
 								),
 								_react2.default.createElement(
@@ -160,7 +212,7 @@
 									_react2.default.createElement(
 										'td',
 										null,
-										this.props.rating
+										this.state.imdbRating
 									)
 								)
 							)
@@ -170,7 +222,7 @@
 							{ className: 'text-center' },
 							_react2.default.createElement(
 								'a',
-								{ href: '#', className: 'btn btn-primary', role: 'button' },
+								{ href: "http://www.imdb.com/title/" + this.state.imdbID, className: 'btn btn-primary', role: 'button', target: '_blank' },
 								'View Movie'
 							)
 						)
@@ -180,9 +232,39 @@
 		}
 	});
 	
-	(0, _reactDom.render)(_react2.default.createElement(MovieForm, null), document.getElementsByClassName("formControl")[0]);
+	var Main = _react2.default.createClass({
+		displayName: 'Main',
 	
-	(0, _reactDom.render)(_react2.default.createElement(Movie, { poster: 'http://ia.media-imdb.com/images/M/MV5BMjM5OTQ1MTY5Nl5BMl5BanBnXkFtZTgwMjM3NzMxODE@._V1_SX300.jpg', title: 'Game of Thrones', year: '2011 -', plot: 'While a civil war brews between several noble families in Westeros, the children of the former rulers of the land attempt to rise up to power. Meanwhile a forgotten race, bent on destruction, return after thousands of years in the North.', rating: '9.5' }), document.getElementsByClassName("row")[0]);
+		getInitialState: function getInitialState() {
+			return {
+				movies: []
+			};
+		},
+		addMovie: function addMovie(movieToAdd) {
+			this.setState({ movies: this.state.movies.concat(movieToAdd) });
+		},
+		render: function render() {
+			var movies = this.state.movies.map(function (movie, index) {
+				return _react2.default.createElement(Movie, { key: index, search: movie });
+			});
+			return _react2.default.createElement(
+				'div',
+				{ className: 'container' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'formControl' },
+					_react2.default.createElement(MovieForm, { addMovieFunction: this.addMovie })
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'row' },
+					movies
+				)
+			);
+		}
+	});
+	
+	(0, _reactDom.render)(_react2.default.createElement(Main, null), document.getElementById("app"));
 
 /***/ },
 /* 1 */
