@@ -106,7 +106,7 @@ var Movie = React.createClass({
 var Main = React.createClass({
 	getInitialState: function(){
 		return {
-			movies:[]
+			movies:["dark knight", "batman", "transformers", "empire strikes back"]
 		};
 	},
 	addMovie: function(movieToAdd){
@@ -121,7 +121,7 @@ var Main = React.createClass({
 		return (
 			<div className="container">
 				<div className="formControl"><MovieForm addMovieFunction={this.addMovie} /></div>
-				<div className="row">
+				<div className="movies row">
 					{movies}
 				</div>
 			</div>

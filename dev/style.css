@@ -14,3 +14,7 @@ body {
 .alert.active {
 	display:block;
 }
+
+.movies .movie:nth-child(3n - 2) {
+	clear:left;
+}

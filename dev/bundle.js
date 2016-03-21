@@ -237,7 +237,7 @@
 	
 		getInitialState: function getInitialState() {
 			return {
-				movies: []
+				movies: ["dark knight", "batman", "transformers", "empire strikes back"]
 			};
 		},
 		addMovie: function addMovie(movieToAdd) {
@@ -257,7 +257,7 @@
 				),
 				_react2.default.createElement(
 					'div',
-					{ className: 'row' },
+					{ className: 'movies row' },
 					movies
 				)
 			);
