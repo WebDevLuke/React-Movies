@@ -18,3 +18,12 @@ body {
 .movies .movie:nth-child(3n - 2) {
 	clear:left;
 }
+
+.movies .btn {
+	margin:0 5px;
+}
+
+noscript {
+	display:none;
+	position:absolute;
+}

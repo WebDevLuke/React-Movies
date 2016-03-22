@@ -20,12 +20,6 @@ var ErrorBox = React.createClass({
 });
 
 var MovieForm = React.createClass({
-	getInitialState: function(){
-		return {
-			errorMsg: this.props.errorMsg,
-			showError: this.props.showError
-		};
-	},
 	handleSubmit: function(e){
 		e.preventDefault();
 		if(this.refs.chosenMovie.value !== "") {
@@ -35,19 +29,19 @@ var MovieForm = React.createClass({
 		}
 		else {
 			// Show error box
-			this.setState({showError: true});
+			this.props.toggleError(true, "No search term has been entered.");
 		}	
 	},
 	handleFocus: function(){
-		this.setState({showError: false});
+		this.props.toggleError(false);
 	},
 	render: function(){
 		return (
 			<div className="jumbotron">
-				<p>IMDB Movie/TV show search</p> 
-				<ErrorBox active={this.state.showError} msg={this.state.errorMsg} />
+				<p>IMDB Movie Search</p> 
+				<ErrorBox active={this.props.showError} msg={this.props.errorMsg} />
 				<form className="input-group input-group-lg" onSubmit={this.handleSubmit}>
-					<input type="text" className="form-control" name="movie-search" placeholder="enter a movie/tv show" onFocus={this.handleFocus} ref="chosenMovie" />
+					<input type="text" className="form-control" name="movie-search" placeholder="Enter a movie name" onFocus={this.handleFocus} ref="chosenMovie" />
 					<span className="input-group-btn">
 						<button className="btn btn-default">Search</button>
 					</span>
@@ -61,69 +55,86 @@ var Movie = React.createClass({
 	getInitialState: function(){
 		return {};
 	},
-	componentDidMount: function(){
+	componentWillMount: function(){
 		var component = this;
 		var search = this.props.search.split(' ').join('+');
-		$.get("http://www.omdbapi.com/?t=" + search + "&y=&plot=short&r=json", function(data){
-			component.setState(data);
-			console.log(data);
+		$.get("http://www.omdbapi.com/?t=" + search + "&y=&plot=short&r=json&type=movie", function(data){
+			if(!data.Error) {
+				component.setState(data);
+				component.setState({test:true});
+			}
+			else {
+				component.props.toggleError(true, "No movie found. Please try a different search term.");
+			}
 		});		
 	},
 	render: function(){
-		return (
-			<div className="col-sm-6 col-md-4 movie">
-				<div className="thumbnail">
-					<img src={this.state.Poster} alt={this.state.Title} />
-					<div className="caption">
-						<table className="table">
-							<tbody>
-								<tr>
-									<th>Title:</th>
-									<td>{this.state.Title}</td>
-								</tr>
-								<tr>
-									<th>Year:</th>
-									<td>{this.state.Year}</td>
-								</tr>
-								<tr>
-									<th>Plot:</th>
-									<td>{this.state.Plot}</td>
-								</tr>
-								<tr>
-									<th>IMDB rating:</th>
-									<td>{this.state.imdbRating}</td>
-								</tr>
-							</tbody>
-						</table>
-						<p className="text-center"><a href={"http://www.imdb.com/title/" + this.state.imdbID}  className="btn btn-primary" role="button" target="_blank">View Movie</a></p>
+		if(this.state.test) {
+			return (
+				<div className="col-sm-6 col-md-4 movie">
+					<div className="thumbnail">
+						<img src={this.state.Poster} alt={this.state.Title} />
+						<div className="caption">
+							<table className="table">
+								<tbody>
+									<tr>
+										<th>Title:</th>
+										<td>{this.state.Title}</td>
+									</tr>
+									<tr>
+										<th>Year:</th>
+										<td>{this.state.Year}</td>
+									</tr>
+									<tr>
+										<th>Plot:</th>
+										<td>{this.state.Plot}</td>
+									</tr>
+									<tr>
+										<th>IMDB rating:</th>
+										<td>{this.state.imdbRating}</td>
+									</tr>
+								</tbody>
+							</table>
+							<p className="text-center"><a href={"http://www.imdb.com/title/" + this.state.imdbID}  className="btn btn-primary" role="button" target="_blank">View Movie</a><span className="btn btn-primary btn-danger" role="button" target="_blank">Remove</span></p>
+						</div>
 					</div>
 				</div>
-			</div>
-		);
+			);
+		}
+		else {
+			return false;
+		}
 	}
 });
 
 var Main = React.createClass({
 	getInitialState: function(){
 		return {
-			movies:["dark knight", "batman", "transformers", "empire strikes back"],
-			errorMsg: "No movie or TV show entered!",
+			movies:["empire strikes back"],
 			showError: false
 		};
 	},
 	addMovie: function(movieToAdd){
 		this.setState({movies: this.state.movies.concat(movieToAdd)});
 	},
+	toggleError: function(show, msg){
+		// Called when the API call returns false
+		this.setState({
+			errorMsg: msg,
+			showError: show
+		});
+	},
 	render: function(){
+		var component = this;
 		var movies = this.state.movies.map(function(movie, index){
 			return (
-				<Movie key={index} search={movie} />
+				<Movie key={index} search={movie} toggleError={component.toggleError} />
 			);
 		});
 		return (
 			<div className="container">
-				<div className="formControl"><MovieForm showError={this.state.showError} errorMsg={this.state.errorMsg} addMovieFunction={this.addMovie} /></div>
-				<div className="movies row">
+				<div className="formControl"><MovieForm toggleError={this.toggleError} showError={this.state.showError} errorMsg={this.state.errorMsg} addMovieFunction={this.addMovie} /></div>
+				<div className="movies row" >
 					{movies}
 				</div>
 			</div>

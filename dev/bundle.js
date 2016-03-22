@@ -80,12 +80,6 @@
 	var MovieForm = _react2.default.createClass({
 		displayName: 'MovieForm',
 	
-		getInitialState: function getInitialState() {
-			return {
-				errorMsg: this.props.errorMsg,
-				showError: this.props.showError
-			};
-		},
 		handleSubmit: function handleSubmit(e) {
 			e.preventDefault();
 			if (this.refs.chosenMovie.value !== "") {
@@ -94,11 +88,11 @@
 				movieInput.value = "";
 			} else {
 				// Show error box
-				this.setState({ showError: true });
+				this.props.toggleError(true, "No search term has been entered.");
 			}
 		},
 		handleFocus: function handleFocus() {
-			this.setState({ showError: false });
+			this.props.toggleError(false);
 		},
 		render: function render() {
 			return _react2.default.createElement(
@@ -107,13 +101,13 @@
 				_react2.default.createElement(
 					'p',
 					null,
-					'IMDB Movie/TV show search'
+					'IMDB Movie Search'
 				),
-				_react2.default.createElement(ErrorBox, { active: this.state.showError, msg: this.state.errorMsg }),
+				_react2.default.createElement(ErrorBox, { active: this.props.showError, msg: this.props.errorMsg }),
 				_react2.default.createElement(
 					'form',
 					{ className: 'input-group input-group-lg', onSubmit: this.handleSubmit },
-					_react2.default.createElement('input', { type: 'text', className: 'form-control', name: 'movie-search', placeholder: 'enter a movie/tv show', onFocus: this.handleFocus, ref: 'chosenMovie' }),
+					_react2.default.createElement('input', { type: 'text', className: 'form-control', name: 'movie-search', placeholder: 'Enter a movie name', onFocus: this.handleFocus, ref: 'chosenMovie' }),
 					_react2.default.createElement(
 						'span',
 						{ className: 'input-group-btn' },
@@ -134,101 +128,114 @@
 		getInitialState: function getInitialState() {
 			return {};
 		},
-		componentDidMount: function componentDidMount() {
+		componentWillMount: function componentWillMount() {
 			var component = this;
 			var search = this.props.search.split(' ').join('+');
-			$.get("http://www.omdbapi.com/?t=" + search + "&y=&plot=short&r=json", function (data) {
-				component.setState(data);
-				console.log(data);
+			$.get("http://www.omdbapi.com/?t=" + search + "&y=&plot=short&r=json&type=movie", function (data) {
+				if (!data.Error) {
+					component.setState(data);
+					component.setState({ test: true });
+				} else {
+					component.props.toggleError(true, "No movie found. Please try a different search term.");
+				}
 			});
 		},
 		render: function render() {
-			return _react2.default.createElement(
-				'div',
-				{ className: 'col-sm-6 col-md-4 movie' },
-				_react2.default.createElement(
+			if (this.state.test) {
+				return _react2.default.createElement(
 					'div',
-					{ className: 'thumbnail' },
-					_react2.default.createElement('img', { src: this.state.Poster, alt: this.state.Title }),
+					{ className: 'col-sm-6 col-md-4 movie' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'caption' },
+						{ className: 'thumbnail' },
+						_react2.default.createElement('img', { src: this.state.Poster, alt: this.state.Title }),
 						_react2.default.createElement(
-							'table',
-							{ className: 'table' },
+							'div',
+							{ className: 'caption' },
 							_react2.default.createElement(
-								'tbody',
-								null,
+								'table',
+								{ className: 'table' },
 								_react2.default.createElement(
-									'tr',
+									'tbody',
 									null,
 									_react2.default.createElement(
-										'th',
+										'tr',
 										null,
-										'Title:'
+										_react2.default.createElement(
+											'th',
+											null,
+											'Title:'
+										),
+										_react2.default.createElement(
+											'td',
+											null,
+											this.state.Title
+										)
 									),
 									_react2.default.createElement(
-										'td',
+										'tr',
 										null,
-										this.state.Title
-									)
-								),
-								_react2.default.createElement(
-									'tr',
-									null,
-									_react2.default.createElement(
-										'th',
-										null,
-										'Year:'
+										_react2.default.createElement(
+											'th',
+											null,
+											'Year:'
+										),
+										_react2.default.createElement(
+											'td',
+											null,
+											this.state.Year
+										)
 									),
 									_react2.default.createElement(
-										'td',
+										'tr',
 										null,
-										this.state.Year
-									)
-								),
-								_react2.default.createElement(
-									'tr',
-									null,
-									_react2.default.createElement(
-										'th',
-										null,
-										'Plot:'
+										_react2.default.createElement(
+											'th',
+											null,
+											'Plot:'
+										),
+										_react2.default.createElement(
+											'td',
+											null,
+											this.state.Plot
+										)
 									),
 									_react2.default.createElement(
-										'td',
+										'tr',
 										null,
-										this.state.Plot
-									)
-								),
-								_react2.default.createElement(
-									'tr',
-									null,
-									_react2.default.createElement(
-										'th',
-										null,
-										'IMDB rating:'
-									),
-									_react2.default.createElement(
-										'td',
-										null,
-										this.state.imdbRating
+										_react2.default.createElement(
+											'th',
+											null,
+											'IMDB rating:'
+										),
+										_react2.default.createElement(
+											'td',
+											null,
+											this.state.imdbRating
+										)
 									)
 								)
-							)
-						),
-						_react2.default.createElement(
-							'p',
-							{ className: 'text-center' },
+							),
 							_react2.default.createElement(
-								'a',
-								{ href: "http://www.imdb.com/title/" + this.state.imdbID, className: 'btn btn-primary', role: 'button', target: '_blank' },
-								'View Movie'
+								'p',
+								{ className: 'text-center' },
+								_react2.default.createElement(
+									'a',
+									{ href: "http://www.imdb.com/title/" + this.state.imdbID, className: 'btn btn-primary', role: 'button', target: '_blank' },
+									'View Movie'
+								),
+								_react2.default.createElement(
+									'span',
+									{ className: 'btn btn-primary btn-danger', role: 'button', target: '_blank' },
+									'Remove'
+								)
 							)
 						)
 					)
-				)
-			);
+				);
+			} else {
+				return false;
+			}
 		}
 	});
 	
@@ -237,17 +244,24 @@
 	
 		getInitialState: function getInitialState() {
 			return {
-				movies: ["dark knight", "batman", "transformers", "empire strikes back"],
-				errorMsg: "No movie or TV show entered!",
+				movies: ["empire strikes back"],
 				showError: false
 			};
 		},
 		addMovie: function addMovie(movieToAdd) {
 			this.setState({ movies: this.state.movies.concat(movieToAdd) });
 		},
+		toggleError: function toggleError(show, msg) {
+			// Called when the API call returns false
+			this.setState({
+				errorMsg: msg,
+				showError: show
+			});
+		},
 		render: function render() {
+			var component = this;
 			var movies = this.state.movies.map(function (movie, index) {
-				return _react2.default.createElement(Movie, { key: index, search: movie });
+				return _react2.default.createElement(Movie, { key: index, search: movie, toggleError: component.toggleError });
 			});
 			return _react2.default.createElement(
 				'div',
@@ -255,7 +269,7 @@
 				_react2.default.createElement(
 					'div',
 					{ className: 'formControl' },
-					_react2.default.createElement(MovieForm, { showError: this.state.showError, errorMsg: this.state.errorMsg, addMovieFunction: this.addMovie })
+					_react2.default.createElement(MovieForm, { toggleError: this.toggleError, showError: this.state.showError, errorMsg: this.state.errorMsg, addMovieFunction: this.addMovie })
 				),
 				_react2.default.createElement(
 					'div',
