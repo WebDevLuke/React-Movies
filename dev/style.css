@@ -15,7 +15,7 @@ body {
 	display:block;
 }
 
-.movies .movie:nth-child(3n - 2) {
+.clear {
 	clear:left;
 }
 

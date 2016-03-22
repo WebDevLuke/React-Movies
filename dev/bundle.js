@@ -125,6 +125,9 @@
 	var Movie = _react2.default.createClass({
 		displayName: 'Movie',
 	
+		handleClick: function handleClick(e) {
+			this.props.removeMovieFunction(e.target.dataset.remove);
+		},
 		getInitialState: function getInitialState() {
 			return {};
 		},
@@ -142,9 +145,10 @@
 		},
 		render: function render() {
 			if (this.state.test) {
+				var clear = this.props.useKey % 3 === 0 ? "clear" : "nope";
 				return _react2.default.createElement(
 					'div',
-					{ className: 'col-sm-6 col-md-4 movie' },
+					{ className: "col-sm-6 col-md-4 movie " + clear },
 					_react2.default.createElement(
 						'div',
 						{ className: 'thumbnail' },
@@ -226,7 +230,7 @@
 								),
 								_react2.default.createElement(
 									'span',
-									{ className: 'btn btn-primary btn-danger', role: 'button', target: '_blank' },
+									{ onClick: this.handleClick, className: 'btn btn-primary btn-danger', 'data-remove': this.props.search, role: 'button', target: '_blank' },
 									'Remove'
 								)
 							)
@@ -251,8 +255,13 @@
 		addMovie: function addMovie(movieToAdd) {
 			this.setState({ movies: this.state.movies.concat(movieToAdd) });
 		},
+		removeMovie: function removeMovie(movieToRemove) {
+			var index = this.state.movies.indexOf(movieToRemove);
+			if (index > -1) {
+				this.state.movies.splice(this.state.movies(index, 1));
+			}
+		},
 		toggleError: function toggleError(show, msg) {
-			// Called when the API call returns false
 			this.setState({
 				errorMsg: msg,
 				showError: show
@@ -261,7 +270,7 @@
 		render: function render() {
 			var component = this;
 			var movies = this.state.movies.map(function (movie, index) {
-				return _react2.default.createElement(Movie, { key: index, search: movie, toggleError: component.toggleError });
+				return _react2.default.createElement(Movie, { key: index, useKey: index, removeMovieFunction: component.removeMovie, search: movie, toggleError: component.toggleError });
 			});
 			return _react2.default.createElement(
 				'div',

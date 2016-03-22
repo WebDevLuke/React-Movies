@@ -52,6 +52,9 @@ var MovieForm = React.createClass({
 });
 
 var Movie = React.createClass({
+	handleClick: function(e){
+		this.props.removeMovieFunction(e.target.dataset.remove);
+	},
 	getInitialState: function(){
 		return {};
 	},
@@ -70,8 +73,9 @@ var Movie = React.createClass({
 	},
 	render: function(){
 		if(this.state.test) {
+			var clear = this.props.useKey % 3 === 0 ? "clear" : "nope";
 			return (
-				<div className="col-sm-6 col-md-4 movie">
+				<div className={"col-sm-6 col-md-4 movie " + clear}>
 					<div className="thumbnail">
 						<img src={this.state.Poster} alt={this.state.Title} />
 						<div className="caption">
@@ -95,7 +99,7 @@ var Movie = React.createClass({
 									</tr>
 								</tbody>
 							</table>
-							<p className="text-center"><a href={"http://www.imdb.com/title/" + this.state.imdbID}  className="btn btn-primary" role="button" target="_blank">View Movie</a><span className="btn btn-primary btn-danger" role="button" target="_blank">Remove</span></p>
+							<p className="text-center"><a href={"http://www.imdb.com/title/" + this.state.imdbID}  className="btn btn-primary" role="button" target="_blank">View Movie</a><span onClick={this.handleClick} className="btn btn-primary btn-danger" data-remove={this.props.search} role="button" target="_blank">Remove</span></p>
 						</div>
 					</div>
 				</div>
@@ -117,8 +121,13 @@ var Main = React.createClass({
 	addMovie: function(movieToAdd){
 		this.setState({movies: this.state.movies.concat(movieToAdd)});
 	},
+	removeMovie: function(movieToRemove){
+		var index = this.state.movies.indexOf(movieToRemove);
+		if (index > -1) {
+    			this.state.movies.splice(this.state.movies(index, 1));
+		}
+	},
 	toggleError: function(show, msg){
-		// Called when the API call returns false
 		this.setState({
 			errorMsg: msg,
 			showError: show
@@ -128,7 +137,7 @@ var Main = React.createClass({
 		var component = this;
 		var movies = this.state.movies.map(function(movie, index){
 			return (
-				<Movie key={index} search={movie} toggleError={component.toggleError} />
+				<Movie key={index} useKey={index} removeMovieFunction={component.removeMovie} search={movie} toggleError={component.toggleError} />
 			);
 		});
 		return (
