@@ -145,14 +145,19 @@
 		},
 		render: function render() {
 			if (this.state.test) {
-				var clear = this.props.useKey % 3 === 0 ? "clear" : "nope";
+				var clear = this.props.useKey % 3 === 0 ? "clear" : "";
+				if (this.state.Poster == "N/A") {
+					var poster = "poster-error.jpg";
+				} else {
+					var poster = this.state.Poster;
+				}
 				return _react2.default.createElement(
 					'div',
 					{ className: "col-sm-6 col-md-4 movie " + clear },
 					_react2.default.createElement(
 						'div',
 						{ className: 'thumbnail' },
-						_react2.default.createElement('img', { src: this.state.Poster, alt: this.state.Title }),
+						_react2.default.createElement('img', { src: poster, alt: this.state.Title }),
 						_react2.default.createElement(
 							'div',
 							{ className: 'caption' },
@@ -248,7 +253,7 @@
 	
 		getInitialState: function getInitialState() {
 			return {
-				movies: ["empire strikes back"],
+				movies: ["empire strikes back", "matrix", "transformers"],
 				showError: false
 			};
 		},
@@ -257,9 +262,12 @@
 		},
 		removeMovie: function removeMovie(movieToRemove) {
 			var index = this.state.movies.indexOf(movieToRemove);
+			console.log(this.state.movies);
 			if (index > -1) {
-				this.state.movies.splice(this.state.movies(index, 1));
+				this.state.movies.splice(index, 1);
 			}
+			// Force rerender
+			this.forceUpdate();
 		},
 		toggleError: function toggleError(show, msg) {
 			this.setState({
@@ -269,6 +277,7 @@
 		},
 		render: function render() {
 			var component = this;
+			console.log(this.state.movies);
 			var movies = this.state.movies.map(function (movie, index) {
 				return _react2.default.createElement(Movie, { key: index, useKey: index, removeMovieFunction: component.removeMovie, search: movie, toggleError: component.toggleError });
 			});

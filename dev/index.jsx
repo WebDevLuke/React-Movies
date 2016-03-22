@@ -73,11 +73,17 @@ var Movie = React.createClass({
 	},
 	render: function(){
 		if(this.state.test) {
-			var clear = this.props.useKey % 3 === 0 ? "clear" : "nope";
+			var clear = this.props.useKey % 3 === 0 ? "clear" : "";
+			if(this.state.Poster == "N/A") {
+				var poster = "poster-error.jpg";
+			}
+			else {
+				var poster = this.state.Poster;
+			}
 			return (
 				<div className={"col-sm-6 col-md-4 movie " + clear}>
 					<div className="thumbnail">
-						<img src={this.state.Poster} alt={this.state.Title} />
+						<img src={poster} alt={this.state.Title} />
 						<div className="caption">
 							<table className="table">
 								<tbody>
@@ -114,7 +120,7 @@ var Movie = React.createClass({
 var Main = React.createClass({
 	getInitialState: function(){
 		return {
-			movies:["empire strikes back"],
+			movies:["empire strikes back", "matrix", "transformers"],
 			showError: false
 		};
 	},
@@ -123,9 +129,12 @@ var Main = React.createClass({
 	},
 	removeMovie: function(movieToRemove){
 		var index = this.state.movies.indexOf(movieToRemove);
+		console.log(this.state.movies);
 		if (index > -1) {
-    			this.state.movies.splice(this.state.movies(index, 1));
+    			this.state.movies.splice(index, 1);
 		}
+		// Force rerender
+		this.forceUpdate();
 	},
 	toggleError: function(show, msg){
 		this.setState({
@@ -135,6 +144,7 @@ var Main = React.createClass({
 	},
 	render: function(){
 		var component = this;
+		console.log(this.state.movies);
 		var movies = this.state.movies.map(function(movie, index){
 			return (
 				<Movie key={index} useKey={index} removeMovieFunction={component.removeMovie} search={movie} toggleError={component.toggleError} />
@@ -143,7 +153,7 @@ var Main = React.createClass({
 		return (
 			<div className="container">
 				<div className="formControl"><MovieForm toggleError={this.toggleError} showError={this.state.showError} errorMsg={this.state.errorMsg} addMovieFunction={this.addMovie} /></div>
-				<div className="movies row" >
+				<div className="movies row">
 					{movies}
 				</div>
 			</div>
