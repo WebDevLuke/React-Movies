@@ -82,8 +82,8 @@
 	
 		getInitialState: function getInitialState() {
 			return {
-				errorMsg: "No movie or TV show entered!",
-				showError: false
+				errorMsg: this.props.errorMsg,
+				showError: this.props.showError
 			};
 		},
 		handleSubmit: function handleSubmit(e) {
@@ -237,7 +237,9 @@
 	
 		getInitialState: function getInitialState() {
 			return {
-				movies: ["dark knight", "batman", "transformers", "empire strikes back"]
+				movies: ["dark knight", "batman", "transformers", "empire strikes back"],
+				errorMsg: "No movie or TV show entered!",
+				showError: false
 			};
 		},
 		addMovie: function addMovie(movieToAdd) {
@@ -253,7 +255,7 @@
 				_react2.default.createElement(
 					'div',
 					{ className: 'formControl' },
-					_react2.default.createElement(MovieForm, { addMovieFunction: this.addMovie })
+					_react2.default.createElement(MovieForm, { showError: this.state.showError, errorMsg: this.state.errorMsg, addMovieFunction: this.addMovie })
 				),
 				_react2.default.createElement(
 					'div',

@@ -20,10 +20,10 @@ var ErrorBox = React.createClass({
 });
 
 var MovieForm = React.createClass({
-	getInitialState: function() {
+	getInitialState: function(){
 		return {
-			errorMsg: "No movie or TV show entered!",
-			showError: false
+			errorMsg: this.props.errorMsg,
+			showError: this.props.showError
 		};
 	},
 	handleSubmit: function(e){
@@ -106,7 +106,9 @@ var Movie = React.createClass({
 var Main = React.createClass({
 	getInitialState: function(){
 		return {
-			movies:["dark knight", "batman", "transformers", "empire strikes back"]
+			movies:["dark knight", "batman", "transformers", "empire strikes back"],
+			errorMsg: "No movie or TV show entered!",
+			showError: false
 		};
 	},
 	addMovie: function(movieToAdd){
@@ -120,7 +122,7 @@ var Main = React.createClass({
 		});
 		return (
 			<div className="container">
-				<div className="formControl"><MovieForm addMovieFunction={this.addMovie} /></div>
+				<div className="formControl"><MovieForm showError={this.state.showError} errorMsg={this.state.errorMsg} addMovieFunction={this.addMovie} /></div>
 				<div className="movies row">
 					{movies}
 				</div>
