@@ -145,7 +145,6 @@
 		},
 		render: function render() {
 			if (this.state.test) {
-				var clear = this.props.useKey % 3 === 0 ? "clear" : "";
 				if (this.state.Poster == "N/A") {
 					var poster = "poster-error.jpg";
 				} else {
@@ -153,7 +152,7 @@
 				}
 				return _react2.default.createElement(
 					'div',
-					{ className: "col-sm-6 col-md-4 movie " + clear },
+					{ className: "col-sm-6 col-md-4 movie" },
 					_react2.default.createElement(
 						'div',
 						{ className: 'thumbnail' },
@@ -253,12 +252,16 @@
 	
 		getInitialState: function getInitialState() {
 			return {
-				movies: ["empire strikes back", "matrix", "transformers"],
+				movies: [],
 				showError: false
 			};
 		},
 		addMovie: function addMovie(movieToAdd) {
-			this.setState({ movies: this.state.movies.concat(movieToAdd) });
+			if ($.inArray(movieToAdd, this.state.movies) === -1) {
+				this.setState({ movies: this.state.movies.concat(movieToAdd) });
+			} else {
+				this.toggleError(true, "You have already added this movie");
+			}
 		},
 		removeMovie: function removeMovie(movieToRemove) {
 			var index = this.state.movies.indexOf(movieToRemove);
@@ -277,9 +280,8 @@
 		},
 		render: function render() {
 			var component = this;
-			console.log(this.state.movies);
 			var movies = this.state.movies.map(function (movie, index) {
-				return _react2.default.createElement(Movie, { key: index, useKey: index, removeMovieFunction: component.removeMovie, search: movie, toggleError: component.toggleError });
+				return _react2.default.createElement(Movie, { key: movie, removeMovieFunction: component.removeMovie, search: movie, toggleError: component.toggleError });
 			});
 			return _react2.default.createElement(
 				'div',

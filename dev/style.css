@@ -23,7 +23,6 @@ body {
 	margin:0 5px;
 }
 
-noscript {
-	display:none;
-	position:absolute;
+.movie:nth-child(3n-2) {
+	clear:left;
 }

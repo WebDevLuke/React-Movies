@@ -73,7 +73,6 @@ var Movie = React.createClass({
 	},
 	render: function(){
 		if(this.state.test) {
-			var clear = this.props.useKey % 3 === 0 ? "clear" : "";
 			if(this.state.Poster == "N/A") {
 				var poster = "poster-error.jpg";
 			}
@@ -81,7 +80,7 @@ var Movie = React.createClass({
 				var poster = this.state.Poster;
 			}
 			return (
-				<div className={"col-sm-6 col-md-4 movie " + clear}>
+				<div className={"col-sm-6 col-md-4 movie"}>
 					<div className="thumbnail">
 						<img src={poster} alt={this.state.Title} />
 						<div className="caption">
@@ -120,12 +119,17 @@ var Movie = React.createClass({
 var Main = React.createClass({
 	getInitialState: function(){
 		return {
-			movies:["empire strikes back", "matrix", "transformers"],
+			movies:[],
 			showError: false
 		};
 	},
 	addMovie: function(movieToAdd){
-		this.setState({movies: this.state.movies.concat(movieToAdd)});
+		if($.inArray(movieToAdd, this.state.movies) === -1) {
+			this.setState({movies: this.state.movies.concat(movieToAdd)});
+		}
+		else {
+			this.toggleError(true, "You have already added this movie");
+		}
 	},
 	removeMovie: function(movieToRemove){
 		var index = this.state.movies.indexOf(movieToRemove);
@@ -144,10 +148,9 @@ var Main = React.createClass({
 	},
 	render: function(){
 		var component = this;
-		console.log(this.state.movies);
 		var movies = this.state.movies.map(function(movie, index){
 			return (
-				<Movie key={index} useKey={index} removeMovieFunction={component.removeMovie} search={movie} toggleError={component.toggleError} />
+				<Movie key={movie} removeMovieFunction={component.removeMovie} search={movie} toggleError={component.toggleError} />
 			);
 		});
 		return (
