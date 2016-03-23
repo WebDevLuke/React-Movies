@@ -1,7 +1,7 @@
 {
   "name": "reactmovies",
   "version": "1.0.0",
-  "description": "",
+  "description": "Just a simple list application using a IMDB API and reactJS",
   "main": "index.js",
   "dependencies": {
     "babel-loader": "^6.2.4",
