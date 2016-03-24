@@ -23,6 +23,6 @@ body {
 	margin:0 5px;
 }
 
-.movie:nth-child(3n-2) {
+.movie:nth-child(3n-2), noscript:nth-child(3n-2) + .movie {
 	clear:left;
 }
