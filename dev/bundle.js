@@ -156,7 +156,6 @@
 					_react2.default.createElement(
 						'div',
 						{ className: 'thumbnail' },
-						_react2.default.createElement('img', { src: poster, alt: this.state.Title }),
 						_react2.default.createElement(
 							'div',
 							{ className: 'caption' },

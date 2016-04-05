@@ -82,7 +82,6 @@ var Movie = React.createClass({
 			return (
 				<div className={"col-sm-6 col-md-4 movie"}>
 					<div className="thumbnail">
-						<img src={poster} alt={this.state.Title} />
 						<div className="caption">
 							<table className="table">
 								<tbody>
